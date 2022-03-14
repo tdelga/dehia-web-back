@@ -14,7 +14,6 @@ SQLALCHEMY_DATABASE_URL = (
         config["db_user"], config["db_pass"], config["db_host"], config["db_name"]
     )
 )
-# SQLALCHEMY_DATABASE_URL = "postgresql://user:password@postgresserver/db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL
