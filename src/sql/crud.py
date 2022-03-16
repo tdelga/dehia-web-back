@@ -57,3 +57,12 @@ def get_resoluciones(db: Session,params, usuario_id : int):
     resoluciones = query.order_by(models.Resolucion.fecha.desc()).all()
 
     return resoluciones
+
+
+def get_resolucion(db: Session, id_resolucion : int):
+    
+    query = db.query(models.Resolucion).filter(models.Resolucion.id == id_resolucion)
+    
+    resolucion = query.first()
+
+    return resolucion

@@ -59,6 +59,7 @@ class Resolucion(BaseModel):
     resolucion: str = Field(..., title="Resolucion de la actividad", example="1")
 
 class ResolucionGet(Resolucion):
+    id: int = Field(..., title="ID de la Base de Datos")
     fecha: datetime.datetime  = Field(..., title="Fecha resolucion de la actividad", example="2021-08-19")
 
     class Config:
@@ -67,6 +68,13 @@ class ResolucionGet(Resolucion):
 class GetResoluciones(BaseModel):
     code: int = Field(200, const=True, title="Código de respuesta", example=200)
     resoluciones: List[ResolucionGet]
+
+    class Config:
+        orm_mode = True
+
+class GetResolucion(BaseModel):
+    code: int = Field(200, const=True, title="Código de respuesta", example=200)
+    resolucion: ResolucionGet
 
     class Config:
         orm_mode = True

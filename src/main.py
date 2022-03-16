@@ -219,7 +219,7 @@ async def Get_Resoluciones(
     try:
 
         resoluciones = crud.get_resoluciones(db,request.query_params,usuario.id)
-        print(resoluciones)
+
         return {
             "code": 200,
             "resoluciones": resoluciones
@@ -232,3 +232,45 @@ async def Get_Resoluciones(
                 "error": "Internal Server Error - Detalle: {0}".format(str(e)),
             },
         )
+
+@app.get(
+    "/resoluciones/{id_resolucion}",
+    response_model=schemas.GetResolucion,
+    description="Retorna una resolucion por id",
+    responses={500: {"model": schemas.MensajeError500}},
+    tags=["Resolucion"],
+)
+async def Get_Resolucion_By_ID(
+    id_resolucion: int,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+):
+
+    try:
+        crud.crear_o_logear_usuario(db, token)
+    except:
+        return JSONResponse(
+            status_code=401,
+            content={
+                "code": 401,
+                "error": "Acceso no autorizado",
+            },
+        )
+
+    try:
+
+        resolucion = crud.get_resolucion(db,id_resolucion)
+
+        return {
+            "code": 200,
+            "resolucion": resolucion
+        }
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "code": 500,
+                "error": "Internal Server Error - Detalle: {0}".format(str(e)),
+            },
+        )
+
