@@ -22,6 +22,7 @@ class Resolucion(Base):
     id = Column(Integer, primary_key=True, index=True)
     id_actividad = Column(Integer)
     resolucion = Column(String(8000))
+    nombre_actividad = Column(String(400))
     fecha = Column(DateTime)
     usuario_id = Column(Integer, ForeignKey('usuario.id'))
     usuario = relationship("Usuario", back_populates="resoluciones")

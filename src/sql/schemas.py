@@ -55,6 +55,7 @@ class Token(BaseModel):
 
 class Resolucion(BaseModel):
     id_actividad: str = Field(..., title="ID de la actividad", example="1")
+    nombre_actividad: str = Field(..., title="Nombre de la actividad", example="Mi actividad")
     resolucion: str = Field(..., title="Resolucion de la actividad", example="1")
 
 class ResolucionGet(Resolucion):

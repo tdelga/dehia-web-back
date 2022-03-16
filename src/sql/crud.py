@@ -41,6 +41,7 @@ def cargar_resolucion(db : Session, resolucion: schemas.ResolucionCreate, id_usu
     nueva_resolucion = models.Resolucion(
             id_actividad= resolucion.id_actividad,
             resolucion= resolucion.resolucion,
+            nombre_actividad= resolucion.nombre_actividad,
             fecha= datetime.now(),
             usuario_id= id_usuario
         )
@@ -53,6 +54,6 @@ def get_resoluciones(db: Session,params, usuario_id : int):
     
     query = db.query(models.Resolucion).filter(models.Resolucion.usuario_id == usuario_id)
     
-    resoluciones = query.all()
+    resoluciones = query.order_by(models.Resolucion.fecha.desc()).all()
 
     return resoluciones

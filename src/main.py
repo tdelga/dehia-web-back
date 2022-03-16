@@ -3,7 +3,7 @@ import os
 from dotenv import dotenv_values
 
 from fastapi import Depends, FastAPI, HTTPException, Request, status
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.responses import JSONResponse
 
 from jose import JWTError, jwt
@@ -14,9 +14,6 @@ from sqlalchemy.orm import Session
 from sql import crud, schemas
 from sql.database import SessionLocal
 
-from security import utils
-
-from datetime import timedelta, datetime
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
@@ -29,8 +26,7 @@ API correspondiente al cliente web de dehia
 app = FastAPI()
 
 origins = [
-    "http://localhost.tiangolo.com",
-    "https://localhost.tiangolo.com",
+    "*",
     "http://localhost",
     "http://localhost:3000",
 ]
@@ -146,8 +142,43 @@ def Cargar_Resolucion(
         )
 
     try:
+        # REQUEST A DEHIA
+        
+        # SE CARGO EXITOSAMENTE LO GUARDO LOCAL
         crud.cargar_resolucion(db, resolucion,usuario.id)
+        
+        return {
+                "code": 201,
+                "mensaje": "Resolucion registrada exitosamente"
+            }
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "code": 500,
+                "error": "Internal Server Error - Detalle: {0}".format(str(e)),
+            },
+        )
 
+@app.post(
+    "/resolucion_anonima",
+    status_code=201,
+    description="Carga la resolucion de una actividad de usuario anonimo",
+    response_model=schemas.CrearResolucion,
+    responses={
+        500: {"model": schemas.MensajeError500},
+        409: {"model": schemas.MensajeErrorGenerico},
+    },
+    tags=["Resolucion"],
+)
+def Cargar_Resolucion_Anonima(
+    resolucion: schemas.ResolucionCreate,
+    db: Session = Depends(get_db)
+):
+
+    try:
+        # REQUEST A DEHIA
+        
         return {
                 "code": 201,
                 "mensaje": "Resolucion registrada exitosamente"
