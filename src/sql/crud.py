@@ -66,3 +66,19 @@ def get_resolucion(db: Session, id_resolucion : int):
     resolucion = query.first()
 
     return resolucion
+
+def get_actividad_cargas_previas(db: Session, id_actividad : int, id_usuario: int):
+    
+    query = db.query(models.Resolucion).filter(models.Resolucion.id_actividad == id_actividad).filter(models.Resolucion.usuario_id == id_usuario).order_by(models.Resolucion.fecha.desc())
+    
+    resolucion = query.first()
+
+    totales = query.count()
+
+    result = {
+        "id_ultima": resolucion.id if resolucion else 0,
+        "fecha_ultima": resolucion.fecha if resolucion else datetime.now(),
+        "totales": totales
+    }
+
+    return result

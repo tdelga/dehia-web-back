@@ -274,3 +274,44 @@ async def Get_Resolucion_By_ID(
             },
         )
 
+@app.get(
+    "/cargas_previas/{id_actividad}",
+    response_model=schemas.GetActividadDetalleResolucion,
+    description="Retorna una info un detalle de resoluciones de una actividad por id",
+    responses={500: {"model": schemas.MensajeError500}},
+    tags=["Resolucion"],
+)
+async def Get_Actividad_Resolucion_By_ID(
+    id_actividad: int,
+    db: Session = Depends(get_db),
+    token: str = Depends(oauth2_scheme)
+):
+
+    try:
+        usuario = crud.crear_o_logear_usuario(db, token)
+    except:
+        return JSONResponse(
+            status_code=401,
+            content={
+                "code": 401,
+                "error": "Acceso no autorizado",
+            },
+        )
+
+    try:
+
+        actividad_cargas_previas = crud.get_actividad_cargas_previas(db,id_actividad,usuario.id)
+
+        return {
+            "code": 200,
+            "actividad_cargas_previas": actividad_cargas_previas
+        }
+    except Exception as e:
+        return JSONResponse(
+            status_code=500,
+            content={
+                "code": 500,
+                "error": "Internal Server Error - Detalle: {0}".format(str(e)),
+            },
+        )
+

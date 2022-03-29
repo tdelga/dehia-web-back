@@ -79,6 +79,15 @@ class GetResolucion(BaseModel):
     class Config:
         orm_mode = True
 
+class ActividadDetalleResolucion(BaseModel):
+    id_ultima : int
+    fecha_ultima : datetime.datetime
+    totales: int
+
+class GetActividadDetalleResolucion(BaseModel):
+    code: int = Field(200, const=True, title="Código de respuesta", example=200)
+    actividad_cargas_previas: ActividadDetalleResolucion
+
 
 class TokenData(BaseModel):
     username: Optional[str] = None
